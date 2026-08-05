@@ -28,10 +28,17 @@ def generate_reading(birth_data: dict, reading_type: str = "full") -> dict | Non
         r = requests.post(
             f"{_api_url()}/api/reading/generate",
             json={"birth_data": birth_data, "reading_type": reading_type},
-            timeout=60,
+            timeout=90,
         )
         r.raise_for_status()
         return r.json()
+    except requests.exceptions.HTTPError as e:
+        try:
+            detail = e.response.json().get("detail", str(e))
+        except Exception:
+            detail = str(e)
+        st.error(f"Reading generation failed: {detail}")
+        return None
     except requests.exceptions.RequestException as e:
         st.error(f"Reading generation failed: {e}")
         return None

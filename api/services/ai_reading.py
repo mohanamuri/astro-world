@@ -31,8 +31,10 @@ def init_knowledge_base() -> None:
     """
     Called once at API startup (lifespan hook in main.py).
     Loads all knowledge markdown files into ChromaDB.
+    LLMs are initialized lazily on first use so a missing GROQ_API_KEY
+    does not crash the entire API at startup.
     """
-    global _knowledge_store, _llm_reading, _llm_horoscope
+    global _knowledge_store
 
     # Load and chunk knowledge documents
     docs = []
@@ -51,11 +53,29 @@ def init_knowledge_base() -> None:
     embeddings = FakeEmbeddings(size=384)
     _knowledge_store = Chroma.from_documents(chunks, embeddings)
 
-    groq_key = os.environ.get("GROQ_API_KEY", "")
-    _llm_reading   = ChatGroq(model="llama-3.3-70b-versatile",  temperature=0.7, api_key=groq_key)
-    _llm_horoscope = ChatGroq(model="llama-3.1-8b-instant",     temperature=0.8, api_key=groq_key)
-
     print(f"Knowledge base ready — {len(chunks)} chunks from {len(list(KNOWLEDGE_DIR.glob('*.md')))} files.")
+
+
+def _get_llm_reading() -> "ChatGroq":
+    """Lazy-initialize reading LLM (requires GROQ_API_KEY)."""
+    global _llm_reading
+    if _llm_reading is None:
+        groq_key = os.environ.get("GROQ_API_KEY", "")
+        if not groq_key:
+            raise RuntimeError("GROQ_API_KEY environment variable is not set on the server.")
+        _llm_reading = ChatGroq(model="llama-3.3-70b-versatile", temperature=0.7, api_key=groq_key)
+    return _llm_reading
+
+
+def _get_llm_horoscope() -> "ChatGroq":
+    """Lazy-initialize horoscope LLM (requires GROQ_API_KEY)."""
+    global _llm_horoscope
+    if _llm_horoscope is None:
+        groq_key = os.environ.get("GROQ_API_KEY", "")
+        if not groq_key:
+            raise RuntimeError("GROQ_API_KEY environment variable is not set on the server.")
+        _llm_horoscope = ChatGroq(model="llama-3.1-8b-instant", temperature=0.8, api_key=groq_key)
+    return _llm_horoscope
 
 
 def _retrieve(query: str, k: int = 8) -> str:
@@ -95,8 +115,7 @@ READING_PROMPTS = {
 
 def generate_reading(chart: ChartResult, reading_type: str = "full") -> ReadingResult:
     """Generate a personalized astrology reading using RAG + Groq LLM."""
-    if _llm_reading is None:
-        raise RuntimeError("Knowledge base not initialized. Call init_knowledge_base() first.")
+    llm = _get_llm_reading()
 
     placements = _key_placements(chart)
     query = " | ".join(placements)
@@ -148,7 +167,7 @@ ASTROLOGICAL KNOWLEDGE BASE (retrieved context):
 
 Please write the personalized reading now.""")
 
-    response = _llm_reading.invoke([system_msg, human_msg])
+    response = llm.invoke([system_msg, human_msg])
     raw = response.content.strip()
 
     sections = _parse_sections(raw)
@@ -184,8 +203,7 @@ def _parse_sections(text: str) -> list[ReadingSection]:
 
 def generate_horoscope(sign: str, system: str, period: str) -> str:
     """Generate a daily or weekly horoscope for a sign."""
-    if _llm_horoscope is None:
-        raise RuntimeError("Knowledge base not initialized.")
+    llm = _get_llm_horoscope()
 
     from datetime import date
     today = date.today().strftime("%B %d, %Y")
@@ -208,7 +226,7 @@ Sign characteristics context:
 
 Write the horoscope now:""")
 
-    response = _llm_horoscope.invoke([system_msg, human_msg])
+    response = llm.invoke([system_msg, human_msg])
     return response.content.strip()
 
 
@@ -219,8 +237,7 @@ def generate_compatibility_narrative(
     synastry_aspects: list[dict],
 ) -> tuple[str, list[str], list[str]]:
     """Generate AI compatibility summary, strengths, and challenges."""
-    if _llm_horoscope is None:
-        raise RuntimeError("Knowledge base not initialized.")
+    llm = _get_llm_horoscope()
 
     harmonious = [a for a in synastry_aspects if a["harmony"] == "Harmonious"]
     challenging = [a for a in synastry_aspects if a["harmony"] == "Challenging"]
@@ -255,7 +272,7 @@ CHALLENGING ASPECTS:
 
 Write the compatibility analysis:""")
 
-    response = _llm_horoscope.invoke([system_msg, human_msg])
+    response = llm.invoke([system_msg, human_msg])
     raw = response.content.strip()
 
     # Parse
