@@ -69,8 +69,54 @@ def route():
     render()
 
 
+AUTHOR_CARD_HTML = """
+<div style='
+    position:fixed;
+    top:14px;
+    right:18px;
+    z-index:9999;
+    background:#1A1A2E;
+    border:1px solid #2A2A4A;
+    border-radius:12px;
+    padding:10px 14px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    box-shadow:0 4px 20px rgba(0,0,0,0.4);
+'>
+  <div style='
+      width:38px;height:38px;
+      background:linear-gradient(135deg,#7B6CF6,#C9A96E);
+      border-radius:50%;
+      display:flex;align-items:center;justify-content:center;
+      font-weight:700;font-size:0.8rem;color:#fff;
+      flex-shrink:0;
+  '>MRA</div>
+  <div>
+    <div style='color:#E8E8F0;font-weight:700;font-size:0.85rem;line-height:1.2;'>Mohan Raju Amuri</div>
+    <div style='color:#888;font-size:0.72rem;margin-bottom:5px;'>AI Engineering Lead</div>
+    <div style='display:flex;gap:10px;'>
+      <a href='https://linkedin.com/in/mohanamuri555' target='_blank'
+         style='color:#5CAE80;font-size:0.75rem;text-decoration:none;font-weight:600;'>
+         LinkedIn ↗
+      </a>
+      <a href='https://github.com/mohanamuri/astro-world' target='_blank'
+         style='color:#7B6CF6;font-size:0.75rem;text-decoration:none;font-weight:600;'>
+         GitHub ↗
+      </a>
+    </div>
+  </div>
+</div>
+"""
+
+
+def render_author_card():
+    st.markdown(AUTHOR_CARD_HTML, unsafe_allow_html=True)
+
+
 def main():
     initialize()
     apply_theme()
+    render_author_card()
     render_sidebar()
     route()
