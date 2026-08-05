@@ -43,6 +43,7 @@ def render_birth_form(
     key_prefix: str = "main",
     show_system: bool = True,
     show_demo: bool = True,
+    button_label: str = "Calculate ✨",
 ) -> dict | None:
     """
     Renders the birth data input form.
@@ -94,7 +95,7 @@ def render_birth_form(
         else:
             system = "both"
 
-    submitted = st.button("Calculate ✨", key=f"{key_prefix}_submit", type="primary",
+    submitted = st.button(button_label, key=f"{key_prefix}_submit", type="primary",
                            use_container_width=True)
 
     if submitted:

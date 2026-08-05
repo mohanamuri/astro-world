@@ -36,19 +36,43 @@ Mars in houses 1, 2, 4, 7, 8, or 12 creates Mangal Dosha. Traditional belief: ca
     col1, col2 = st.columns(2)
     with col1:
         st.markdown("#### 👤 Person 1")
-        person1 = render_birth_form(key_prefix="compat_p1", show_system=False, show_demo=True)
+        p1_submitted = render_birth_form(key_prefix="compat_p1", show_system=False, show_demo=True, button_label="Confirm Person 1 ✅")
+        if p1_submitted:
+            st.session_state.compat_p1_data = p1_submitted
+
     with col2:
         st.markdown("#### 👤 Person 2")
-        person2 = render_birth_form(key_prefix="compat_p2", show_system=False, show_demo=False)
+        p2_submitted = render_birth_form(key_prefix="compat_p2", show_system=False, show_demo=False, button_label="Confirm Person 2 ✅")
+        if p2_submitted:
+            st.session_state.compat_p2_data = p2_submitted
 
-    # Both forms submitted
-    if person1 and person2:
-        with st.spinner("Analyzing compatibility..."):
-            result = calculate_compatibility(person1, person2)
-        if result:
-            _display_result(result)
+    p1 = st.session_state.get("compat_p1_data")
+    p2 = st.session_state.get("compat_p2_data")
 
-    elif "compat_result" in st.session_state:
+    # Status indicators
+    c1, c2 = st.columns(2)
+    with c1:
+        if p1:
+            st.success(f"✅ Person 1 set: **{p1['name']}**")
+        else:
+            st.info("Fill Person 1 details and click Calculate")
+    with c2:
+        if p2:
+            st.success(f"✅ Person 2 set: **{p2['name']}**")
+        else:
+            st.info("Fill Person 2 details and click Calculate")
+
+    # Analyze button — only active when both persons are set
+    if p1 and p2:
+        if st.button("💫 Analyze Compatibility", type="primary", use_container_width=True):
+            with st.spinner("Analyzing compatibility..."):
+                result = calculate_compatibility(p1, p2)
+            if result:
+                _display_result(result)
+    elif "compat_result" in st.session_state and not (p1 and p2):
+        pass  # stale result cleared when inputs change
+
+    if "compat_result" in st.session_state and p1 and p2:
         _display_result(st.session_state.compat_result)
 
 
