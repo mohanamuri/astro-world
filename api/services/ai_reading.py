@@ -52,7 +52,7 @@ def init_knowledge_base() -> None:
     _knowledge_store = Chroma.from_documents(chunks, embeddings)
 
     groq_key = os.environ.get("GROQ_API_KEY", "")
-    _llm_reading   = ChatGroq(model="llama-3.1-70b-versatile",  temperature=0.7, api_key=groq_key)
+    _llm_reading   = ChatGroq(model="llama-3.3-70b-versatile",  temperature=0.7, api_key=groq_key)
     _llm_horoscope = ChatGroq(model="llama-3.1-8b-instant",     temperature=0.8, api_key=groq_key)
 
     print(f"Knowledge base ready — {len(chunks)} chunks from {len(list(KNOWLEDGE_DIR.glob('*.md')))} files.")
