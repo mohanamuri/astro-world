@@ -72,8 +72,8 @@ def route():
 AUTHOR_CARD_HTML = """
 <div style='
     position:fixed;
-    top:14px;
-    right:18px;
+    top:60px;
+    right:12px;
     z-index:9999;
     background:#1A1A2E;
     border:1px solid #2A2A4A;
