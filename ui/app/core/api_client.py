@@ -15,7 +15,7 @@ def _api_url() -> str:
 
 def calculate_chart(birth_data: dict) -> dict | None:
     try:
-        r = requests.post(f"{_api_url()}/api/chart/calculate", json=birth_data, timeout=30)
+        r = requests.post(f"{_api_url()}/api/chart/calculate", json=birth_data, timeout=90)
         r.raise_for_status()
         return r.json()
     except requests.exceptions.RequestException as e:
@@ -67,7 +67,7 @@ def get_horoscope(sign: str, period: str = "today", system: str = "both") -> dic
 
 def health_check() -> bool:
     try:
-        r = requests.get(f"{_api_url()}/health", timeout=5)
+        r = requests.get(f"{_api_url()}/health", timeout=60)
         return r.status_code == 200
     except Exception:
         return False
