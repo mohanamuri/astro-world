@@ -3,7 +3,6 @@ Main Streamlit app — router and layout.
 """
 import streamlit as st
 from app.theme.styles import apply_theme
-from app.core.api_client import health_check
 
 
 def initialize():
@@ -55,17 +54,17 @@ def route():
     page = st.session_state.page
 
     if page == "home":
-        from pages.home import render
+        from views.home import render
     elif page == "birth_chart":
-        from pages.birth_chart import render
+        from views.birth_chart import render
     elif page == "reading":
-        from pages.reading import render
+        from views.reading import render
     elif page == "compatibility":
-        from pages.compatibility import render
+        from views.compatibility import render
     elif page == "horoscope":
-        from pages.horoscope import render
+        from views.horoscope import render
     else:
-        from pages.home import render
+        from views.home import render
 
     render()
 
