@@ -56,7 +56,7 @@ def get_horoscope(sign: str, period: str = "today", system: str = "both") -> dic
         r = requests.get(
             f"{_api_url()}/api/horoscope/{sign}",
             params={"period": period, "system": system},
-            timeout=30,
+            timeout=90,
         )
         r.raise_for_status()
         return r.json()
