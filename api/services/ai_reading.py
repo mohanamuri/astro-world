@@ -13,7 +13,6 @@ from typing import Optional
 
 from langchain_community.document_loaders import TextLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_chroma import Chroma
 from langchain_groq import ChatGroq
 from langchain_core.messages import SystemMessage, HumanMessage
@@ -48,7 +47,8 @@ def init_knowledge_base() -> None:
     )
     chunks = splitter.split_documents(docs)
 
-    embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
+    from langchain_community.embeddings import FakeEmbeddings
+    embeddings = FakeEmbeddings(size=384)
     _knowledge_store = Chroma.from_documents(chunks, embeddings)
 
     groq_key = os.environ.get("GROQ_API_KEY", "")
