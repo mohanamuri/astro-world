@@ -18,24 +18,40 @@ from services.geocode import GeoResult
 PLANETS = [
     "sun", "moon", "mercury", "venus", "mars",
     "jupiter", "saturn", "uranus", "neptune", "pluto",
-    "mean_node",   # Rahu (North Node)
-    "true_south_node",  # Ketu (South Node)
+    "true_north_lunar_node",  # Rahu (North Node) — kerykeion v5+
+    "true_south_lunar_node",  # Ketu (South Node) — kerykeion v5+
 ]
 
 PLANET_DISPLAY = {
-    "sun":             "Sun",
-    "moon":            "Moon",
-    "mercury":         "Mercury",
-    "venus":           "Venus",
-    "mars":            "Mars",
-    "jupiter":         "Jupiter",
-    "saturn":          "Saturn",
-    "uranus":          "Uranus",
-    "neptune":         "Neptune",
-    "pluto":           "Pluto",
-    "mean_node":       "Rahu",
-    "true_south_node": "Ketu",
+    "sun":                    "Sun",
+    "moon":                   "Moon",
+    "mercury":                "Mercury",
+    "venus":                  "Venus",
+    "mars":                   "Mars",
+    "jupiter":                "Jupiter",
+    "saturn":                 "Saturn",
+    "uranus":                 "Uranus",
+    "neptune":                "Neptune",
+    "pluto":                  "Pluto",
+    "true_north_lunar_node":  "Rahu",
+    "true_south_lunar_node":  "Ketu",
 }
+
+_HOUSE_NAME_TO_INT = {
+    "First_House": 1,  "Second_House": 2,  "Third_House": 3,
+    "Fourth_House": 4, "Fifth_House": 5,   "Sixth_House": 6,
+    "Seventh_House": 7,"Eighth_House": 8,  "Ninth_House": 9,
+    "Tenth_House": 10, "Eleventh_House": 11,"Twelfth_House": 12,
+}
+
+
+def _house_int(house_val) -> int:
+    """Convert kerykeion v5 house string (e.g. 'Eighth_House') to int."""
+    if house_val is None:
+        return 1
+    if isinstance(house_val, int):
+        return house_val
+    return _HOUSE_NAME_TO_INT.get(str(house_val), 1)
 
 
 def _make_subject(
@@ -83,7 +99,7 @@ def _planet_list(subject: AstrologicalSubject) -> list[PlanetPosition]:
         positions.append(PlanetPosition(
             planet=PLANET_DISPLAY.get(key, key.capitalize()),
             sign=planet_obj.sign,
-            house=int(planet_obj.house) if planet_obj.house else 1,
+            house=_house_int(planet_obj.house),
             degree=round(float(planet_obj.position), 2),
             retrograde=bool(getattr(planet_obj, "retrograde", False)),
         ))
