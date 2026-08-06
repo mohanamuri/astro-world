@@ -22,6 +22,7 @@ PAGES = {
     "reading":       ("✨", "AI Reading"),
     "compatibility": ("💫", "Compatibility"),
     "horoscope":     ("🔮", "Daily Horoscope"),
+    "docs":          ("📖", "Documentation"),
 }
 
 
@@ -63,6 +64,8 @@ def route():
         from views.compatibility import render
     elif page == "horoscope":
         from views.horoscope import render
+    elif page == "docs":
+        from views.docs import render
     else:
         from views.home import render
 
@@ -72,36 +75,43 @@ def route():
 AUTHOR_CARD_HTML = """
 <div style='
     position:fixed;
-    top:60px;
-    right:12px;
+    top:56px;
+    right:16px;
     z-index:9999;
-    background:#1A1A2E;
-    border:1px solid #2A2A4A;
-    border-radius:12px;
-    padding:10px 14px;
+    background:linear-gradient(145deg,#1E1E35,#14142A);
+    border:1px solid #3A3A6A;
+    border-radius:16px;
+    padding:14px 18px;
     display:flex;
     align-items:center;
-    gap:12px;
-    box-shadow:0 4px 20px rgba(0,0,0,0.4);
+    gap:14px;
+    box-shadow:0 6px 30px rgba(0,0,0,0.55), 0 0 0 1px rgba(201,169,110,0.12);
+    min-width:220px;
 '>
   <div style='
-      width:38px;height:38px;
+      width:50px;height:50px;
       background:linear-gradient(135deg,#7B6CF6,#C9A96E);
       border-radius:50%;
       display:flex;align-items:center;justify-content:center;
-      font-weight:700;font-size:0.8rem;color:#fff;
+      font-weight:800;font-size:0.95rem;color:#fff;
       flex-shrink:0;
+      box-shadow:0 2px 12px rgba(123,108,246,0.45);
+      letter-spacing:0.5px;
   '>MRA</div>
   <div>
-    <div style='color:#E8E8F0;font-weight:700;font-size:0.85rem;line-height:1.2;'>Mohan Raju Amuri</div>
-    <div style='color:#888;font-size:0.72rem;margin-bottom:5px;'>AI Engineering Lead</div>
-    <div style='display:flex;gap:10px;'>
+    <div style='color:#F0F0FF;font-weight:700;font-size:0.95rem;line-height:1.3;letter-spacing:0.2px;'>Mohan Raju Amuri</div>
+    <div style='color:#9090B0;font-size:0.78rem;margin-bottom:7px;font-style:italic;'>AI Engineering Lead</div>
+    <div style='display:flex;gap:12px;'>
       <a href='https://linkedin.com/in/mohanamuri555' target='_blank'
-         style='color:#5CAE80;font-size:0.75rem;text-decoration:none;font-weight:600;'>
+         style='color:#5CAE80;font-size:0.8rem;text-decoration:none;font-weight:700;
+                background:rgba(92,174,128,0.1);padding:2px 8px;border-radius:6px;
+                border:1px solid rgba(92,174,128,0.25);'>
          LinkedIn ↗
       </a>
       <a href='https://github.com/mohanamuri/astro-world' target='_blank'
-         style='color:#7B6CF6;font-size:0.75rem;text-decoration:none;font-weight:600;'>
+         style='color:#A89CF0;font-size:0.8rem;text-decoration:none;font-weight:700;
+                background:rgba(123,108,246,0.1);padding:2px 8px;border-radius:6px;
+                border:1px solid rgba(123,108,246,0.25);'>
          GitHub ↗
       </a>
     </div>
