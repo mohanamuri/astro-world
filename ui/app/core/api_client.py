@@ -49,7 +49,7 @@ def calculate_compatibility(person1: dict, person2: dict) -> dict | None:
         r = requests.post(
             f"{_api_url()}/api/compatibility/calculate",
             json={"person1": person1, "person2": person2},
-            timeout=60,
+            timeout=90,
         )
         r.raise_for_status()
         return r.json()
