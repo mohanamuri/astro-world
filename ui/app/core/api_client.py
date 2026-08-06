@@ -53,6 +53,13 @@ def calculate_compatibility(person1: dict, person2: dict) -> dict | None:
         )
         r.raise_for_status()
         return r.json()
+    except requests.exceptions.HTTPError as e:
+        try:
+            detail = e.response.json().get("detail", str(e))
+        except Exception:
+            detail = str(e)
+        st.error(f"Compatibility calculation failed: {detail}")
+        return None
     except requests.exceptions.RequestException as e:
         st.error(f"Compatibility calculation failed: {e}")
         return None
