@@ -67,20 +67,27 @@ input, textarea, select {
     border-radius: 6px !important;
 }
 
-/* ── Sidebar nav ── */
-.nav-item {
-    display: block;
-    padding: 10px 16px;
-    border-radius: 8px;
-    cursor: pointer;
-    color: #B0B8D0;
-    text-decoration: none;
-    margin-bottom: 4px;
-    transition: all 0.2s;
+/* ── Sidebar nav buttons (secondary/inactive) ── */
+[data-testid="stSidebar"] .stButton > button[kind="secondary"] {
+    background-color: #1E1E38 !important;
+    color: #B0B8D0 !important;
+    border: 1px solid #2A2A4A !important;
+    border-radius: 8px !important;
+    font-weight: 500 !important;
 }
-.nav-item:hover, .nav-item.active {
-    background-color: #2A2A4A;
-    color: #C9A96E;
+[data-testid="stSidebar"] .stButton > button[kind="secondary"]:hover {
+    background-color: #2A2A4A !important;
+    color: #C9A96E !important;
+    border-color: #C9A96E44 !important;
+}
+
+/* ── Sidebar nav buttons (primary/active) ── */
+[data-testid="stSidebar"] .stButton > button[kind="primary"] {
+    background: linear-gradient(135deg, #C9A96E, #a07a45) !important;
+    color: #0D0D1A !important;
+    border: none !important;
+    border-radius: 8px !important;
+    font-weight: 700 !important;
 }
 
 /* ── Planet badge ── */
